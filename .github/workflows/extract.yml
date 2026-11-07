@@ -20,6 +20,9 @@ jobs:
           cp -a melatonin/. .
           rm -rf melatonin
           rm melatonin-source.zip
+          # Don't push the build workflow via this token (GITHUB_TOKEN can't
+          # create workflow files). main.yml is uploaded separately.
+          rm -f .github/workflows/main.yml
           ls
       - name: Commit extracted source
         run: |
