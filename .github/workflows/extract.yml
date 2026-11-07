@@ -13,6 +13,7 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v4
+
       - name: Extract source
         run: |
           unzip -q melatonin-source.zip
@@ -23,7 +24,11 @@ jobs:
           # Don't push the build workflow via this token (GITHUB_TOKEN can't
           # create workflow files). main.yml is uploaded separately.
           rm -f .github/workflows/main.yml
+          # Submodules are bundled as regular files in the zip, not gitlinks,
+          # so drop .gitmodules to stop checkout trying to init submodules.
+          rm -f .gitmodules
           ls
+
       - name: Commit extracted source
         run: |
           git config user.name "Melatonin"
