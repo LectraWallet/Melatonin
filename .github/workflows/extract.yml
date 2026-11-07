@@ -1,0 +1,32 @@
+name: "Melatonin: extract source"
+
+on:
+  push:
+    paths:
+      - 'melatonin-source.zip'
+  workflow_dispatch:
+
+jobs:
+  extract:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Extract source
+        run: |
+          unzip -q melatonin-source.zip
+          shopt -s dotglob
+          mv melatonin/* .
+          rmdir melatonin
+          rm melatonin-source.zip
+          ls
+
+      - name: Commit extracted source
+        run: |
+          git config user.name "Melatonin"
+          git config user.email "melatonin@local"
+          git add -A
+          git commit -m "Melatonin source" || echo "nothing to commit"
+          git push
